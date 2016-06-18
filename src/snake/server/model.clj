@@ -33,7 +33,6 @@
 (defn client-uid* [client-id]
   (next-color))
 
-;; use time-to-live cache for memoization
 (def client-uid (memo/ttl client-uid* :ttl/threshold (* 60 60 1000)))
 
 (defn next-uid [{:keys [params]}]
@@ -89,16 +88,15 @@
         path [[x y]]]
     (if x
       (-> world
-          (assoc-in [:players uid] [health x y dx dy length path username])
-          (update :board clear-board uid)
-          (assoc-in [:board x y] uid)
-          (with-new-food))
+        (assoc-in [:players uid] [health x y dx dy length path username])
+        (update :board clear-board uid)
+        (assoc-in [:board y x] uid)
+        (with-new-food))
       world)))
 
 (defn enter-game [uid]
   (dosync (alter world new-player uid
-                 (if-let [[health x y dx dy length path username]
-                          (get-in @world [:players uid])]
+                 (if-let [[health x y dx dy length path username] (get-in @world [:players uid])]
                    username
                    "Unknown"))))
 
@@ -146,8 +144,8 @@
           (and (not= dx (- cdx)))
           (and (not= dy (- cdy))))
       (-> world
-          (assoc-in [:dirs uid] [dx dy])
-          (update-in [:next-dirs dissoc uid]))
+        (assoc-in [:dirs uid] [dx dy])
+        (update-in [:next-dirs] dissoc uid))
       (if (get-in world [:dirs uid])
         (assoc-in world [:next-dirs uid] [dx dy])
         world))
@@ -167,7 +165,7 @@
   (reduce apply-dir world (:dirs world)))
 
 (defn step [world]
-  (moves (trim-tails (:dirs world))))
+  (moves (trim-tails (dirs world))))
 
 (defn tick []
   (dosync (alter world step)))
@@ -176,19 +174,19 @@
   (dosync (alter world with-dir uid dx dy)))
 
 (defn username [uid username]
-  (dosync (alter world assoc-in [:players uid 7] username)))
+    (dosync (alter world assoc-in [:players uid 7] username)))
 
 (defn board-without-player [board uid]
   (mapv (fn [v]
           (mapv #(when (not= uid %) %) v))
         board))
 
-(defn without-player [board uid]
+(defn without-player [world uid]
   (-> world
-      (update :players dissoc uid)
-      (update :dirs dissoc uid)
-      (update :next-dirs dissoc uid)
-      (update :board board-without-player uid)))
+    (update :players dissoc uid)
+    (update :dirs dissoc uid)
+    (update :next-dirs dissoc uid)
+    (update :board board-without-player uid)))
 
 (defn remove-player [uid]
   (dosync (alter world without-player uid)))

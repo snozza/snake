@@ -83,4 +83,3 @@
   (defonce ticker-thread
     (doto (Thread. ticker)
       (.start))))
-

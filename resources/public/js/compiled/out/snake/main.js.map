@@ -1,0 +1,1 @@
+{"version":3,"file":"\/Users\/andrew.snead\/personal_projects\/snake\/resources\/public\/js\/compiled\/out\/snake\/main.js","sources":["main.cljs?rel=1466240369812"],"lineCount":9,"mappings":";AAAA;;;;;AAMA,wCAAA,xCAACA,2HACEC,wBACD,wBAAA,xBAAGC","names":["reagent.core\/render-component","snake.view\/main","js\/document"]}

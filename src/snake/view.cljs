@@ -6,7 +6,7 @@
     [snake.model :as model]
     [snake.communication :as communication]
     [goog.crypt :as crypt]
-    [goog.dom.forms])
+    [goog.dom.forms :as forms])
   (:import
     [goog.crypt Md5]))
 
@@ -18,7 +18,8 @@
   (when (model/alive?)
     (condp = (.-keyCode e)
       KeyCodes/LEFT (dir e [-1 0])
-      KeyCodes/A (dir e [1 0])
+      KeyCodes/A (dir e [-1 0])
+      KeyCodes/RIGHT (dir e [1 0])
       KeyCodes/D (dir e [1 0])
       KeyCodes/UP (dir e [0 -1])
       KeyCodes/W (dir e [0 -1])
