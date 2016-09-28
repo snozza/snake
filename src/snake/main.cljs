@@ -1,7 +1,7 @@
-(ns ^:figwheel-always snakelake.main
+(ns ^:figwheel-always snake.main
   (:require
-    [snakelake.ainit]
-    [snakelake.view :as view]
+    [snake.ainit]
+    [snake.view :as view]
     [reagent.core :as reagent]))
 
 (reagent/render-component
